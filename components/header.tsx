@@ -7,16 +7,22 @@ import { Input } from "@/components/ui/input"
 import { ModeToggle } from "./mode-toggle"
 import { useTheme } from "next-themes"
 import Image from "next/image"
+import { useEffect, useState } from "react"
 
 export default function Header() {
   const { theme } = useTheme()
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background">
       <div className="container flex h-14 items-center">
         <div className="flex items-center gap-2 mr-4">
           <Link href="/" className="flex items-center gap-2">
-            {theme === "dark" ? (
+            {mounted && theme === "dark" ? (
               <Image src="/logo-dark.svg" alt="DevForum Logo" width={30} height={30} className="h-8 w-8" />
             ) : (
               <Image src="/logo-light.svg" alt="DevForum Logo" width={30} height={30} className="h-8 w-8" />
@@ -46,10 +52,10 @@ export default function Header() {
           </div>
           <ModeToggle />
           <Button variant="outline" size="sm" asChild>
-            <Link href="/login">Log in</Link>
+            <Link href="/auth/login">Log in</Link>
           </Button>
           <Button size="sm" asChild>
-            <Link href="/signup">Sign up</Link>
+            <Link href="/auth/signup">Sign up</Link>
           </Button>
         </div>
       </div>
