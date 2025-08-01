@@ -1,10 +1,12 @@
 import Link from "next/link"
+import { memo } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import UserInfo from "./user-info"
+import type { Question } from "@/types"
 
 // Sample data for questions
-const questions = [
+const questions: Question[] = [
   {
     id: 1,
     title:
@@ -57,7 +59,7 @@ const questions = [
   },
 ]
 
-export default function QuestionList() {
+const QuestionList = memo(function QuestionList() {
   return (
     <div className="space-y-4">
       {questions.map((question) => (
@@ -76,22 +78,13 @@ export default function QuestionList() {
                 <p className="text-sm text-muted-foreground">{question.description}</p>
                 <div className="flex flex-wrap gap-2 pt-2">
                   {question.tags.map((tag) => (
-                    <Badge key={tag} variant="secondary" className="bg-accent">
+                    <Badge key={tag} className="bg-accent">
                       {tag}
                     </Badge>
                   ))}
                 </div>
-                <div className="flex items-center justify-end gap-2 pt-2">
-                  <Avatar className="h-6 w-6">
-                    <AvatarImage src={question.user.image} alt={question.user.name} />
-                    <AvatarFallback>{question.user.initials}</AvatarFallback>
-                  </Avatar>
-                  <span className="text-xs text-muted-foreground">
-                    <Link href={`/users/${question.user.name}`} className="text-primary hover:underline">
-                      {question.user.name}
-                    </Link>{" "}
-                    asked {question.askedTime}
-                  </span>
+                <div className="flex justify-end pt-2">
+                  <UserInfo user={question.user} askedTime={question.askedTime} />
                 </div>
               </div>
             </div>
@@ -100,5 +93,7 @@ export default function QuestionList() {
       ))}
     </div>
   )
-}
+})
+
+export default QuestionList
 

@@ -2,21 +2,22 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useState, useCallback } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Label } from "@/components/ui/label"
+import type { QuestionFormData, QuestionPreview } from "@/types"
 
 export default function AskQuestionPage() {
   const [title, setTitle] = useState("")
   const [body, setBody] = useState("")
   const [tags, setTags] = useState("")
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [preview, setPreview] = useState({ title: "", body: "", tags: [] })
+  const [preview, setPreview] = useState<QuestionPreview>({ title: "", body: "", tags: [] })
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
 
@@ -32,15 +33,15 @@ export default function AskQuestionPage() {
     setTags("")
     setIsSubmitting(false)
     alert("Your question has been submitted!")
-  }
+  }, [title, body, tags])
 
-  const generatePreview = () => {
+  const generatePreview = useCallback(() => {
     setPreview({
       title,
       body,
       tags: tags.split(" ").filter((tag) => tag.trim() !== ""),
     })
-  }
+  }, [title, body, tags])
 
   return (
     <div className="container py-6">
