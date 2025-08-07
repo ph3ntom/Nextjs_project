@@ -11,12 +11,14 @@ import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
 import { Eye, EyeOff, ExternalLink } from "lucide-react"
 import { useTheme } from "next-themes"
+import { useAuth } from "@/contexts/auth-context"
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false)
   const [userId, setUserId] = useState("")
   const [password, setPassword] = useState("")
   const { theme } = useTheme()
+  const { login } = useAuth()
   const router = useRouter()
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -37,9 +39,17 @@ export default function LoginPage() {
   
       const data = await response.json();
       console.log(data);
-      router.push('/'); // 메인 페이지로 리디렉션
-
-      alert(data.message);
+      
+      if (data.code === "0000" && data.userId && data.sessionId) {
+        login({
+          userId: data.userId,
+          sessionId: data.sessionId
+        });
+        router.push('/'); // 메인 페이지로 리디렉션
+        alert(data.message);
+      } else {
+        alert(data.message || "로그인에 실패했습니다.");
+      }
   
     } catch (error) {
       console.error("Login error:", error);

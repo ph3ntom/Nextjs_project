@@ -1,16 +1,18 @@
 "use client"
 
 import Link from "next/link"
-import { Search } from "lucide-react"
+import { Search, LogOut } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { ModeToggle } from "./mode-toggle"
 import { useTheme } from "next-themes"
+import { useAuth } from "@/contexts/auth-context"
 import Image from "next/image"
 import { useEffect, useState } from "react"
 
 export default function Header() {
   const { theme } = useTheme()
+  const { user, isLoggedIn, logout, isHydrated } = useAuth()
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
@@ -51,12 +53,31 @@ export default function Header() {
             />
           </div>
           <ModeToggle />
-          <Button variant="outline" size="sm" asChild>
-            <Link href="/auth/login">Log in</Link>
-          </Button>
-          <Button size="sm" asChild>
-            <Link href="/auth/signup">Sign up</Link>
-          </Button>
+          {mounted && isHydrated ? (
+            isLoggedIn ? (
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-medium">{user?.userId}</span>
+                <Button variant="outline" size="sm" onClick={logout}>
+                  <LogOut className="h-4 w-4 mr-1" />
+                  로그아웃
+                </Button>
+              </div>
+            ) : (
+              <>
+                <Button variant="outline" size="sm" asChild>
+                  <Link href="/auth/login">Log in</Link>
+                </Button>
+                <Button size="sm" asChild>
+                  <Link href="/auth/signup">Sign up</Link>
+                </Button>
+              </>
+            )
+          ) : (
+            <div className="flex items-center gap-2">
+              <div className="h-8 w-16 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+              <div className="h-8 w-20 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+            </div>
+          )}
         </div>
       </div>
     </header>
