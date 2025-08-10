@@ -7,7 +7,9 @@
       "Bash(npx kill-port:*)",
       "Bash(git remote set-url:*)",
       "Bash(git push:*)",
-      "Bash(mkdir:*)"
+      "Bash(mkdir:*)",
+      "mcp__ide__getDiagnostics",
+      "Bash(npx tsc:*)"
     ],
     "deny": []
   }

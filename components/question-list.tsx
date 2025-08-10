@@ -1,65 +1,69 @@
+"use client"
+
 import Link from "next/link"
-import { memo } from "react"
+import { memo, useState, useEffect } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import UserInfo from "./user-info"
-import type { Question } from "@/types"
-
-// Sample data for questions
-const questions: Question[] = [
-  {
-    id: 1,
-    title:
-      "Why did Vue choose a reactivity-based state management approach, and why does Vue 3 support both 'ref()' and 'reactive()'?",
-    description:
-      "I'm curious about the background and philosophy behind Vue's decision to adopt a reactivity-based state management approach. I understand the various benefits of using a reactive state...",
-    votes: 0,
-    answers: 0,
-    views: 2,
-    tags: ["vue.js", "vuejs2", "vuejs3", "reactive"],
-    user: {
-      name: "yeongahui",
-      image: "/placeholder-user.jpg",
-      initials: "YA",
-    },
-    askedTime: "1 min ago",
-  },
-  {
-    id: 2,
-    title:
-      "How to find the start of a substring that isn't proceeded by a certain character, and ends with a character not proceeded by a character, in regex",
-    description:
-      "So, I have a regex problem I'm trying to solve and can't figure out. I need to find a string that starts with R or K, but not followed by a #, continuing onwards til it finds another R or K which...",
-    votes: 0,
-    answers: 0,
-    views: 5,
-    tags: ["regex", "string"],
-    user: {
-      name: "user29974491",
-      image: "/placeholder-user.jpg",
-      initials: "UN",
-    },
-    askedTime: "2 mins ago",
-  },
-  {
-    id: 3,
-    title: "SignalR in dotnet 9 and Angular v19 errors - Websockets issues",
-    description:
-      "here is errors from Chrome Debugger's screen: [2025-03-14T07:24:52.776Z] Information: Normalizing '/downloadHub' to 'https://127.0.0.1:63349/downloadHub'. Utils.js:148 [2025-03-14T07:24:52.776Z]...",
-    votes: 0,
-    answers: 0,
-    views: 5,
-    tags: [".net", "angular", "asp.net-core-signalr"],
-    user: {
-      name: "DOS2057",
-      image: "/placeholder-user.jpg",
-      initials: "DO",
-    },
-    askedTime: "4 mins ago",
-  },
-]
+import type { Question, Answer } from "@/types"
 
 const QuestionList = memo(function QuestionList() {
+  const [questions, setQuestions] = useState<Question[]>([])
+  const [answers, setAnswers] = useState<Answer[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  const fetchAnswers = async (questionIds: number[]) => {
+    try {
+      const answerPromises = questionIds.map(async (questionId) => {
+        const response = await fetch(`http://localhost:3001/questions/${questionId}/answers`)
+        if (!response.ok) {
+          throw new Error(`Failed to fetch answers for question ${questionId}`)
+        }
+        return response.json()
+      })
+      
+      const answersData = await Promise.all(answerPromises)
+      const flattenedAnswers = answersData.flat()
+      setAnswers(flattenedAnswers)
+    } catch (err) {
+      console.error('Error fetching answers:', err)
+    }
+  }
+
+  useEffect(() => {
+    const fetchQuestions = async () => {
+      try {
+        const response = await fetch('http://localhost:3001/questions')
+        if (!response.ok) {
+          throw new Error('Failed to fetch questions')
+        }
+        const data = await response.json()
+        setQuestions(data)
+        
+        // Questions를 가져온 후 answers도 가져옴
+        if (data.length > 0) {
+          const questionIds = data.map((q: Question) => q.id)
+          await fetchAnswers(questionIds)
+        }
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Unknown error')
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchQuestions()
+  }, [])
+
+  if (loading) {
+    return <div className="text-center py-8">Loading questions...</div>
+  }
+
+  if (error) {
+    return <div className="text-center py-8 text-red-500">Error: {error}</div>
+  }
+
   return (
     <div className="space-y-4">
       {questions.map((question) => (

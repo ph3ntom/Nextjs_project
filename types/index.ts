@@ -26,12 +26,15 @@ export interface Question {
 
 export interface Answer {
   id: number
-  questionId: number
-  body: string
+  content: string
   votes: number
+  accepted: boolean
+  question_id: number
+  user_id: number
+  createdAt: string
+  updatedAt: string
   user: User
   answeredTime: string
-  accepted?: boolean
 }
 
 export interface Tag {

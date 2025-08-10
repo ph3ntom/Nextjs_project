@@ -16,7 +16,7 @@ export default function Sidebar() {
             </Link>
             <Link
               href="/questions"
-              className="flex items-center gap-3 rounded-md bg-accent px-3 py-2 text-sm font-medium text-accent-foreground"
+              className="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground"
             >
               <MessageSquare className="h-4 w-4" />
               <span>Questions</span>
