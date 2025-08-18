@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "allow": [
+      "Bash(npm run dev:*)",
+      "Bash(taskkill:*)",
+      "Bash(npx kill-port:*)",
+      "Bash(git remote set-url:*)",
+      "Bash(git push:*)",
+      "Bash(mkdir:*)",
+      "mcp__ide__getDiagnostics",
+      "Bash(npx tsc:*)",
+      "Bash(npm install)",
+      "Bash(npm install:*)",
+      "Bash(npm cache clean:*)",
+      "Bash(rmdir:*)",
+      "Bash(rd:*)",
+      "Bash(powershell:*)",
+      "Bash(del package-lock.json)",
+      "Bash(rm:*)",
+      "Bash(npm audit:*)"
+    ],
+    "deny": []
+  }
+}
