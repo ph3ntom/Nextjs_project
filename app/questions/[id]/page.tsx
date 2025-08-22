@@ -10,6 +10,7 @@ import AnswerForm from "@/components/answer-form"
 import CodeBlock from "@/components/code-block"
 import { useState, useEffect, use } from "react"
 import type { Question, Answer } from "@/types"
+import { useAuth } from "@/contexts/auth-context"
 
 interface QuestionPageProps {
   params: Promise<{
@@ -23,6 +24,7 @@ export default function QuestionPage({ params }: QuestionPageProps) {
   const [answers, setAnswers] = useState<Answer[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const { isLoggedIn, isHydrated } = useAuth()
 
   useEffect(() => {
     const fetchQuestionAndAnswers = async () => {
@@ -237,10 +239,12 @@ export default function QuestionPage({ params }: QuestionPageProps) {
       </div>
 
       {/* Answer form */}
-      <div className="mt-10">
-        <h2 className="text-xl font-bold mb-4">Your Answer</h2>
-        <AnswerForm questionId={question.id.toString()} />
-      </div>
+      {isLoggedIn && isHydrated && (
+        <div className="mt-10">
+          <h2 className="text-xl font-bold mb-4">Your Answer</h2>
+          <AnswerForm questionId={question.id.toString()} />
+        </div>
+      )}
 
       {/* Related questions */}
       <div className="mt-10">

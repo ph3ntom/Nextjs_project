@@ -37,12 +37,12 @@ export default function AnswerForm({ questionId }: AnswerFormProps) {
     // 백엔드 API 호출을 위한 데이터 구조
     const answerData = {
       content: answer,
-      question_id: parseInt(questionId),
-      user_id: user?.userId ? parseInt(user.userId) : 0
+      userId: user?.userId,
+      mbrId: user?.mbrId
     }
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/questions/${questionId}/answers`, {
+      const response = await fetch(`http://localhost:3001/questions/${questionId}/answers`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
