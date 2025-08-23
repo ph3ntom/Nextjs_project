@@ -24,7 +24,7 @@ export default function QuestionPage({ params }: QuestionPageProps) {
   const [answers, setAnswers] = useState<Answer[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const { isLoggedIn, isHydrated } = useAuth()
+  const { isLoggedIn, isHydrated, user } = useAuth()
 
   useEffect(() => {
     const fetchQuestionAndAnswers = async () => {
@@ -84,7 +84,19 @@ export default function QuestionPage({ params }: QuestionPageProps) {
   return (
     <div className="container py-6">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold mb-4">{question.title}</h1>
+        <div className="flex items-start justify-between mb-4">
+          <h1 className="text-2xl font-bold">{question.title}</h1>
+          {isLoggedIn && user?.userId === question.user?.userId && (
+            <div className="flex gap-2">
+              <Button variant="outline" size="sm" asChild>
+                <Link href={`/questions/${id}/edit`}>수정하기</Link>
+              </Button>
+              <Button variant="outline" size="sm">
+                삭제하기
+              </Button>
+            </div>
+          )}
+        </div>
         <div className="flex items-center gap-4 text-sm text-muted-foreground mb-6">
           <div>Asked {question.askedTime}</div>
           <div>Viewed {question.views} times</div>

@@ -24,12 +24,16 @@ export default function Header() {
       <div className="container flex h-14 items-center">
         <div className="flex items-center gap-2 mr-4">
           <Link href="/" className="flex items-center gap-2">
-            {mounted && theme === "dark" ? (
-              <Image src="/logo-dark.svg" alt="DevForum Logo" width={30} height={30} className="h-8 w-8" />
-            ) : (
-              <Image src="/logo-light.svg" alt="DevForum Logo" width={30} height={30} className="h-8 w-8" />
-            )}
-            <span className="hidden font-bold sm:inline-block">DevForum</span>
+            <div suppressHydrationWarning>
+              {!mounted ? (
+                <Image src="/logo-light.svg" alt="DevForum Logo" width={30} height={30} className="h-8 w-8" />
+              ) : theme === "dark" ? (
+                <Image src="/logo-dark.svg" alt="DevForum Logo" width={30} height={30} className="h-8 w-8" />
+              ) : (
+                <Image src="/logo-light.svg" alt="DevForum Logo" width={30} height={30} className="h-8 w-8" />
+              )}
+            </div>
+            <span className="hidden font-bold sm:inline-block" suppressHydrationWarning>DevForum</span>
           </Link>
         </div>
         <nav className="flex items-center gap-4 sm:gap-6">
