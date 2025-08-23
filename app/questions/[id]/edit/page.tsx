@@ -93,7 +93,8 @@ export default function EditQuestionPage({ params }: EditQuestionPageProps) {
       title,
       description: body,
       tags: tagsArray.length > 0 ? tagsArray : undefined,
-      mbrId: user?.mbrId || 0
+      mbrId: user?.mbrId || 0,
+      targetQuestionId: parseInt(id)  // 취약점: 게시물 ID를 Body에 포함 (조작 가능)
     }
 
     console.log('전송할 데이터:', questionData)
