@@ -99,8 +99,8 @@ export default function EditQuestionPage({ params }: EditQuestionPageProps) {
     console.log('전송할 데이터:', questionData)
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/questions/${id}`, {
-        method: 'PUT', // 수정이므로 PUT 사용
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/questions/${id}/edit`, {
+        method: 'POST', // 새로운 API 엔드포인트 사용
         headers: {
           'Content-Type': 'application/json',
         },

@@ -9,6 +9,7 @@ import { formatDistanceToNow } from "date-fns"
 import AnswerForm from "@/components/answer-form"
 import CodeBlock from "@/components/code-block"
 import { useState, useEffect, use } from "react"
+import { useRouter } from "next/navigation"
 import type { Question, Answer } from "@/types"
 import { useAuth } from "@/contexts/auth-context"
 
@@ -25,6 +26,7 @@ export default function QuestionPage({ params }: QuestionPageProps) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const { isLoggedIn, isHydrated, user } = useAuth()
+  const router = useRouter()
 
   useEffect(() => {
     const fetchQuestionAndAnswers = async () => {
@@ -53,6 +55,33 @@ export default function QuestionPage({ params }: QuestionPageProps) {
 
     fetchQuestionAndAnswers()
   }, [id])
+
+  const handleDelete = async () => {
+    if (!confirm('정말 이 질문을 삭제하시겠습니까?')) return;
+    
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/questions/${id}/del`, {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json' 
+        },
+        body: JSON.stringify({ 
+          mbrId: user?.mbrId || 0 
+        })
+      });
+      
+      if (response.ok) {
+        alert('질문이 삭제되었습니다.');
+        router.push('/questions');
+      } else {
+        const errorData = await response.json();
+        alert(errorData.message || '삭제에 실패했습니다.');
+      }
+    } catch (error) {
+      console.error('삭제 실패:', error);
+      alert('삭제 중 오류가 발생했습니다.');
+    }
+  }
 
   if (loading) {
     return (
@@ -91,7 +120,7 @@ export default function QuestionPage({ params }: QuestionPageProps) {
               <Button variant="outline" size="sm" asChild>
                 <Link href={`/questions/${id}/edit`}>수정하기</Link>
               </Button>
-              <Button variant="outline" size="sm">
+              <Button variant="outline" size="sm" onClick={handleDelete}>
                 삭제하기
               </Button>
             </div>
