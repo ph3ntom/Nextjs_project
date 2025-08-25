@@ -38,11 +38,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const login = (userData: User) => {
     setUser(userData)
     localStorage.setItem('user', JSON.stringify(userData))
+    localStorage.setItem('isLoggedIn', 'true')
   }
 
   const logout = () => {
     setUser(null)
     localStorage.removeItem('user')
+    localStorage.removeItem('isLoggedIn')
   }
 
   const isLoggedIn = !!user

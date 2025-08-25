@@ -11,17 +11,22 @@ interface UserInfoProps {
 
 const UserInfo = memo(function UserInfo({ user, askedTime, className = "" }: UserInfoProps) {
   return (
-    <div className={`flex items-center gap-2 ${className}`}>
-      <Avatar className="h-6 w-6">
-        <AvatarImage src={user.image} alt={user.name} />
-        <AvatarFallback>{user.initials}</AvatarFallback>
-      </Avatar>
-      <span className="text-xs text-muted-foreground">
-        <Link href={`/users/${user.name}`} className="text-primary hover:underline">
-          {user.name}
-        </Link>{" "}
+    <div className={`flex items-center gap-2 bg-accent/50 p-2 rounded-md ${className}`}>
+      <div className="text-xs text-muted-foreground">
         asked {askedTime}
-      </span>
+      </div>
+      <div className="flex items-center gap-2">
+        <Avatar className="h-6 w-6">
+          <AvatarImage src={user.image} alt={user.name} />
+          <AvatarFallback>{user.initials}</AvatarFallback>
+        </Avatar>
+        <div>
+          <Link href={`/users/${user.name}`} className="text-xs font-medium hover:underline">
+            {user.name}
+          </Link>
+          <div className="text-xs text-muted-foreground">{user.reputation}</div>
+        </div>
+      </div>
     </div>
   )
 })

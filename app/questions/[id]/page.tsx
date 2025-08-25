@@ -56,6 +56,35 @@ export default function QuestionPage({ params }: QuestionPageProps) {
     fetchQuestionAndAnswers()
   }, [id])
 
+  const handleDeleteAnswer = async (answerId: number) => {
+    if (!confirm('정말 이 답변을 삭제하시겠습니까?')) return;
+    
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/questions/${id}/answers/${answerId}/del`, 
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            mbrId: user?.mbrId || 0,
+            targetAnswerId: answerId  // 취약점: 파라미터 조작 가능
+          })
+        }
+      );
+      
+      if (response.ok) {
+        setAnswers(answers.filter(answer => answer.id !== answerId));
+        alert('답변이 삭제되었습니다.');
+      } else {
+        const errorData = await response.json();
+        alert(errorData.message || '삭제에 실패했습니다.');
+      }
+    } catch (error) {
+      console.error('답변 삭제 실패:', error);
+      alert('삭제 중 오류가 발생했습니다.');
+    }
+  };
+
   const handleDelete = async () => {
     if (!confirm('정말 이 질문을 삭제하시겠습니까?')) return;
     
@@ -253,6 +282,16 @@ export default function QuestionPage({ params }: QuestionPageProps) {
                       <Button variant="ghost" size="sm">
                         Flag
                       </Button>
+                      {isLoggedIn && user?.mbrId === answer.user?.id && (
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          onClick={() => handleDeleteAnswer(answer.id)}
+                          className="text-red-600 hover:text-red-800 hover:bg-red-50"
+                        >
+                          Delete
+                        </Button>
+                      )}
                     </div>
                     <div className="flex items-center gap-2 bg-accent/50 p-2 rounded-md">
                       <div className="text-sm text-muted-foreground">

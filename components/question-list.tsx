@@ -70,25 +70,27 @@ const QuestionList = memo(function QuestionList() {
         <Card key={question.id}>
           <CardContent className="p-6">
             <div className="flex gap-4">
-              <div className="flex flex-col items-center gap-2 text-sm text-muted-foreground">
+              <div className="flex flex-col items-center gap-2 text-sm text-muted-foreground min-w-[80px]">
                 <div>{question.votes} votes</div>
                 <div>{question.answers} answers</div>
                 <div>{question.views} views</div>
               </div>
-              <div className="space-y-2">
+              <div className="flex-1 space-y-2">
                 <Link href={`/questions/${question.id}`} className="text-lg font-medium hover:text-primary">
                   {question.title}
                 </Link>
                 <p className="text-sm text-muted-foreground">{question.description}</p>
-                <div className="flex flex-wrap gap-2 pt-2">
-                  {question.tags.map((tag) => (
-                    <Badge key={tag} className="bg-accent">
-                      {tag}
-                    </Badge>
-                  ))}
-                </div>
-                <div className="flex justify-end pt-2">
-                  <UserInfo user={question.user} askedTime={question.askedTime} />
+                <div className="flex items-center justify-between pt-2">
+                  <div className="flex flex-wrap gap-2">
+                    {question.tags.map((tag) => (
+                      <Badge key={tag} className="bg-accent">
+                        {tag}
+                      </Badge>
+                    ))}
+                  </div>
+                  <div className="ml-auto">
+                    <UserInfo user={question.user} askedTime={question.askedTime} />
+                  </div>
                 </div>
               </div>
             </div>

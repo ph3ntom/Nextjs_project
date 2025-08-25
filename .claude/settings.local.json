@@ -18,7 +18,8 @@
       "Bash(powershell:*)",
       "Bash(del package-lock.json)",
       "Bash(rm:*)",
-      "Bash(npm audit:*)"
+      "Bash(npm audit:*)",
+      "Bash(curl:*)"
     ],
     "deny": []
   }
