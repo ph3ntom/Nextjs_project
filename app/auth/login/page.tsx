@@ -44,7 +44,8 @@ export default function LoginPage() {
         login({
           userId: data.userId,
           sessionId: data.sessionId,
-          mbrId: data.mbrId
+          mbrId: data.mbrId,
+          points: data.point || 0
         });
         router.push('/'); // 메인 페이지로 리디렉션
         alert(data.message);

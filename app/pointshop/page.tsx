@@ -76,8 +76,12 @@ const sampleProducts: Product[] = [
 
 export default function PointShopPage() {
   const [products] = useState<Product[]>(sampleProducts)
-  const [userPoints, setUserPoints] = useState(2500)
   const { user, isLoggedIn } = useAuth()
+  const userPoints = user?.points || 0
+  
+  // 디버깅용 로그
+  console.log('PointShop - user:', user)
+  console.log('PointShop - userPoints:', userPoints)
 
   return (
     <div className="container py-6">
@@ -87,7 +91,7 @@ export default function PointShopPage() {
           {isLoggedIn && (
             <div className="flex items-center gap-2 bg-accent/50 p-3 rounded-md">
               <Star className="h-5 w-5 text-yellow-500" />
-              <span className="font-semibold">{userPoints.toLocaleString()} P</span>
+              <span className="font-semibold">{userPoints} P</span>
             </div>
           )}
         </div>

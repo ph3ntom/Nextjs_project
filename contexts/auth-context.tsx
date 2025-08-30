@@ -6,6 +6,7 @@ interface User {
   userId: string
   sessionId: string
   mbrId: number
+  points?: number
 }
 
 interface AuthContextType {
