@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { Home, MessageSquare, Tag, Users, Building, Briefcase, MessageCircle } from "lucide-react"
+import { Home, MessageSquare, Tag, Users, ShoppingBag, Briefcase, MessageCircle } from "lucide-react"
 
 export default function Sidebar() {
   return (
@@ -36,11 +36,11 @@ export default function Sidebar() {
               <span>Users</span>
             </Link>
             <Link
-              href="/companies"
+              href="/pointshop"
               className="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground"
             >
-              <Building className="h-4 w-4" />
-              <span>Companies</span>
+              <ShoppingBag className="h-4 w-4" />
+              <span>PointShop</span>
             </Link>
           </div>
         </div>
