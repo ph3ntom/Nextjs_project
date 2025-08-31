@@ -13,6 +13,7 @@ interface AuthContextType {
   user: User | null
   login: (userData: User) => void
   logout: () => void
+  updateUserPoints: (points: number) => void
   isLoggedIn: boolean
   isHydrated: boolean
 }
@@ -27,7 +28,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const storedUser = localStorage.getItem('user')
     if (storedUser) {
       try {
-        setUser(JSON.parse(storedUser))
+        const userData = JSON.parse(storedUser)
+        // points 속성이 없으면 0으로 초기화
+        if (userData.points === undefined) {
+          userData.points = 0
+        }
+        setUser(userData)
       } catch (error) {
         console.error('Failed to parse stored user data:', error)
         localStorage.removeItem('user')
@@ -48,10 +54,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     localStorage.removeItem('isLoggedIn')
   }
 
+  const updateUserPoints = (points: number) => {
+    if (user) {
+      setUser({ ...user, points })
+    }
+  }
+
   const isLoggedIn = !!user
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, isLoggedIn, isHydrated }}>
+    <AuthContext.Provider value={{ user, login, logout, updateUserPoints, isLoggedIn, isHydrated }}>
       {children}
     </AuthContext.Provider>
   )
