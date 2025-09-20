@@ -19,7 +19,9 @@
       "Bash(del package-lock.json)",
       "Bash(rm:*)",
       "Bash(npm audit:*)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Read(//c/Users/K1240365/Desktop/Nestjs_Back-main/**)",
+      "Read(//c/Users/K1240365/Desktop/Nestjs_Back-main/src/**)"
     ],
     "deny": []
   }
