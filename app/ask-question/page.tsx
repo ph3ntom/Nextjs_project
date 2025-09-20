@@ -20,9 +20,49 @@ export default function AskQuestionPage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [preview, setPreview] = useState<QuestionPreview>({ title: "", body: "", tags: [] })
   const [error, setError] = useState<string | null>(null)
-  
+
   const router = useRouter()
   const { user } = useAuth()
+
+  // HTML 에디터 도구 함수들
+  const insertTag = (tag: string) => {
+    const textarea = document.getElementById('body') as HTMLTextAreaElement
+    if (textarea) {
+      const start = textarea.selectionStart
+      const end = textarea.selectionEnd
+      const selectedText = textarea.value.substring(start, end)
+      const before = textarea.value.substring(0, start)
+      const after = textarea.value.substring(end)
+
+      let newText: string
+      if (tag === 'bold') {
+        newText = before + `<strong>${selectedText || 'bold text'}</strong>` + after
+      } else if (tag === 'italic') {
+        newText = before + `<em>${selectedText || 'italic text'}</em>` + after
+      } else if (tag === 'link') {
+        const url = prompt('Enter URL:') || '#'
+        newText = before + `<a href="${url}">${selectedText || 'link text'}</a>` + after
+      } else if (tag === 'img') {
+        const src = prompt('Enter image URL:') || ''
+        newText = before + `<img src="${src}" alt="${selectedText || 'image'}" />` + after
+      } else if (tag === 'script') {
+        newText = before + `</div><script>${selectedText || 'alert("XSS test")'}</script><div>` + after
+      } else if (tag === 'xss-img') {
+        newText = before + `<img src="x" onmouseout="alert('XSS via img')" />` + after
+      } else if (tag === 'xss-svg') {
+        newText = before + `<svg onload="alert('XSS via SVG')" />` + after
+      } else if (tag === 'xss-details') {
+        newText = before + `<details open ontoggle="alert('XSS via details')">Click me</details>` + after
+      } else if (tag === 'xss-iframe') {
+        newText = before + `<iframe src="javascript:alert('XSS via iframe')"></iframe>` + after
+      } else {
+        newText = body // 기본값으로 현재 body 사용
+      }
+
+      setBody(newText)
+      textarea.focus()
+    }
+  }
 
   const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault()
@@ -36,7 +76,9 @@ export default function AskQuestionPage() {
       return
     }
 
-    if (body.length < 20) {
+    // HTML 태그를 제거한 순수 텍스트 길이 체크
+    const bodyText = body.replace(/<[^>]*>/g, '').trim()
+    if (bodyText.length < 20) {
       setError("질문 내용은 최소 20자 이상이어야 합니다.")
       setIsSubmitting(false)
       return
@@ -147,7 +189,7 @@ export default function AskQuestionPage() {
             id="title"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            placeholder="e.g. How to center a div with Tailwind CSS"
+            placeholder=""
             required
           />
           <p className="text-xs text-muted-foreground">
@@ -165,19 +207,57 @@ export default function AskQuestionPage() {
               </TabsTrigger>
             </TabsList>
             <TabsContent value="write" className="mt-2">
-              <Textarea
-                id="body"
-                value={body}
-                onChange={(e) => setBody(e.target.value)}
-                placeholder="Describe your problem in detail. Include code if relevant."
-                className="min-h-[200px]"
-                required
-              />
+              <div className="space-y-2">
+                {/* HTML 에디터 툴바 */}
+                <div className="flex gap-2 p-2 bg-muted rounded-md">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => insertTag('bold')}
+                  >
+                    <strong>B</strong>
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => insertTag('italic')}
+                  >
+                    <em>I</em>
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => insertTag('link')}
+                  >
+                    🔗
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => insertTag('img')}
+                  >
+                    🖼️
+                  </Button>
+                </div>
+
+                <Textarea
+                  id="body"
+                  value={body}
+                  onChange={(e) => setBody(e.target.value)}
+                  placeholder=""
+                  className="min-h-[250px] font-mono text-sm"
+                  required
+                />
+              </div>
             </TabsContent>
             <TabsContent value="preview" className="mt-2">
               <div className="min-h-[200px] border rounded-md p-4 prose dark:prose-invert max-w-none">
                 {preview.body ? (
-                  preview.body.split("\n\n").map((paragraph, idx) => <p key={idx}>{paragraph}</p>)
+                  <div dangerouslySetInnerHTML={{ __html: preview.body }} />
                 ) : (
                   <p className="text-muted-foreground">Nothing to preview</p>
                 )}
@@ -185,7 +265,7 @@ export default function AskQuestionPage() {
             </TabsContent>
           </Tabs>
           <p className="text-xs text-muted-foreground">
-            Include all the information someone would need to answer your question. You can use markdown for formatting. (최소 20자)
+            Include all the information someone would need to answer your question. You can use HTML tags for rich formatting. Use the toolbar buttons above or write HTML directly. (최소 20자)
           </p>
         </div>
 
@@ -195,7 +275,7 @@ export default function AskQuestionPage() {
             id="tags"
             value={tags}
             onChange={(e) => setTags(e.target.value)}
-            placeholder="e.g. javascript react tailwindcss"
+            placeholder=""
             required
           />
           <p className="text-xs text-muted-foreground">

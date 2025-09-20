@@ -21,7 +21,8 @@
       "Bash(npm audit:*)",
       "Bash(curl:*)",
       "Read(//c/Users/K1240365/Desktop/Nestjs_Back-main/**)",
-      "Read(//c/Users/K1240365/Desktop/Nestjs_Back-main/src/**)"
+      "Read(//c/Users/K1240365/Desktop/Nestjs_Back-main/src/**)",
+      "Bash(npm uninstall:*)"
     ],
     "deny": []
   }

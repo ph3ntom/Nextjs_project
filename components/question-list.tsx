@@ -79,7 +79,10 @@ const QuestionList = memo(function QuestionList() {
                 <Link href={`/questions/${question.id}`} className="text-lg font-medium hover:text-primary">
                   {question.title}
                 </Link>
-                <p className="text-sm text-muted-foreground">{question.description}</p>
+                <div
+                  className="text-sm text-muted-foreground"
+                  dangerouslySetInnerHTML={{ __html: question.description }}
+                />
                 <div className="flex items-center justify-between pt-2">
                   <div className="flex flex-wrap gap-2">
                     {question.tags.map((tag) => (

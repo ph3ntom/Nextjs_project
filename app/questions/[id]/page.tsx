@@ -182,8 +182,8 @@ export default function QuestionPage({ params }: QuestionPageProps) {
         {/* Question content */}
         <div className="space-y-4">
           <div className="prose dark:prose-invert max-w-none">
-            <p>{question.description}</p>
-            {question.body && <p>{question.body}</p>}
+            <div dangerouslySetInnerHTML={{ __html: question.description }} />
+            {question.body && <div dangerouslySetInnerHTML={{ __html: question.body }} />}
           </div>
 
           <div className="flex flex-wrap gap-2 mt-4">
