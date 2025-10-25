@@ -50,7 +50,7 @@ export default function UsersPage() {
 
   const fetchUsers = async () => {
     try {
-      const response = await fetch('http://localhost:3001/users')
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users`)
       if (response.ok) {
         const data = await response.json()
         setUsersData(data)
@@ -70,7 +70,7 @@ export default function UsersPage() {
 
     setSearching(true)
     try {
-      const response = await fetch(`http://localhost:3001/users/search?q=${encodeURIComponent(searchQuery)}`)
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/search?q=${encodeURIComponent(searchQuery)}`)
 
       if (response.ok) {
         const data = await response.json()

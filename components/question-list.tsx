@@ -16,7 +16,7 @@ const QuestionList = memo(function QuestionList() {
   const fetchAnswers = async (questionIds: number[]) => {
     try {
       const answerPromises = questionIds.map(async (questionId) => {
-        const response = await fetch(`http://localhost:3001/questions/${questionId}/answers`)
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/questions/${questionId}/answers`)
         if (!response.ok) {
           throw new Error(`Failed to fetch answers for question ${questionId}`)
         }

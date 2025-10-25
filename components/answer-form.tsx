@@ -42,7 +42,7 @@ export default function AnswerForm({ questionId }: AnswerFormProps) {
     }
 
     try {
-      const response = await fetch(`http://localhost:3001/questions/${questionId}/answers`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/questions/${questionId}/answers`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
